@@ -13,6 +13,7 @@ mongoose.connect("mongodb://localhost:27017/yelp_camp", {
 var campgroundSchema = new mongoose.Schema({
 	name: String,
 	image: String,
+	description: String,
 });
 
 var Campground = mongoose.model("Campground", campgroundSchema);
@@ -24,12 +25,12 @@ app.get("/", function (req, res) {
 	res.render("landing");
 });
 
-app.get("/campgrounds", function (req, res) {
+app.get("/index", function (req, res) {
 	Campground.find({}, function (err, campgrounds) {
 		if (err) {
 			console.log(err);
 		} else {
-			res.render("campgrounds", { campgrounds: campgrounds });
+			res.render("index", { campgrounds: campgrounds });
 		}
 	});
 });
@@ -37,7 +38,10 @@ app.get("/campgrounds", function (req, res) {
 app.get("/campgrounds/new", function (req, res) {
 	res.render("new");
 });
-app.post("/campgrounds", function (req, res) {
+app.get("/campgrounds/:id", function (req, res) {
+	res.render("show");
+});
+app.post("/index", function (req, res) {
 	var name = req.body.name;
 	var image = req.body.image;
 	var newCampground = { name: name, image: image };
@@ -48,7 +52,7 @@ app.post("/campgrounds", function (req, res) {
 			console.log(newOne);
 		}
 	});
-	res.redirect("/campgrounds");
+	res.redirect("/index");
 });
 
 process.env.PORT = 5000;
