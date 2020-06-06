@@ -18,6 +18,8 @@ var campgroundSchema = new mongoose.Schema({
 
 var Campground = mongoose.model("Campground", campgroundSchema);
 
+app.use(express.static("public"));
+app.use(express.static(__dirname + "/images/"));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.set("view engine", "ejs");
 
@@ -38,13 +40,23 @@ app.get("/index", function (req, res) {
 app.get("/campgrounds/new", function (req, res) {
 	res.render("new");
 });
+
 app.get("/campgrounds/:id", function (req, res) {
-	res.render("show");
+	Campground.findById(req.params.id, function (err, foundCampground) {
+		if (err) {
+			console.log(err);
+		} else {
+			console.log(foundCampground);
+			res.render("show", { campground: foundCampground });
+		}
+	});
 });
-app.post("/index", function (req, res) {
+
+app.post("/campgrounds", function (req, res) {
 	var name = req.body.name;
+	var description = req.body.description;
 	var image = req.body.image;
-	var newCampground = { name: name, image: image };
+	var newCampground = { name: name, description: description, image: image };
 	Campground.create(newCampground, function (err, newOne) {
 		if (err) {
 			console.log(err);

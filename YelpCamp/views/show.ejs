@@ -1,1 +1,8 @@
-<h2>Campground spec</h2>
+<%- include("partials/header") %>
+<h1><%= campground.name  %></h1>
+
+<img src="<%= campground.image %> " style="width: 480px;">
+
+<p><%= campground.description %> </p>
+
+<%- include("partials/footer") %>
